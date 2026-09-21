@@ -1,0 +1,1362 @@
+<title>Debaten</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:wght@400;500;600&display=swap">
+
+<style>
+  /* ============================================================
+     Tokens — light (complete palette lives here)
+     ============================================================ */
+  :root {
+    --ground:      #edeff2;
+    --raised:      #fbfcfd;
+    --sunk:        #e4e7ec;
+    --rule:        #d5dae1;
+    --rule-strong: #b9c1cc;
+
+    --ink:   #10151c;
+    --ink-2: #4e5865;
+    --ink-3: #7e8894;
+
+    --pro:      #9a6510;
+    --pro-wash: rgba(154, 101, 16, 0.085);
+    --pro-edge: rgba(154, 101, 16, 0.4);
+
+    --con:      #27529e;
+    --con-wash: rgba(39, 82, 158, 0.085);
+    --con-edge: rgba(39, 82, 158, 0.4);
+
+    --flag:      #a8372a;
+    --flag-wash: rgba(168, 55, 42, 0.09);
+
+    --cta-bg:   #10151c;
+    --cta-ink:  #fbfcfd;
+    --focus:    #27529e;
+
+    --shadow: 0 1px 2px rgba(16, 21, 28, .05), 0 8px 24px -16px rgba(16, 21, 28, .25);
+
+    --display: "Fraunces", "Iowan Old Style", Georgia, serif;
+    --body: "Public Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+    --measure: 66ch;
+    --shell: 1120px;
+    --gutter: clamp(1rem, 4vw, 3rem);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #0c0f14;
+      --raised:      #141922;
+      --sunk:        #090c10;
+      --rule:        #262d39;
+      --rule-strong: #3a4352;
+
+      --ink:   #e8e9ec;
+      --ink-2: #99a2af;
+      --ink-3: #6b7480;
+
+      --pro:      #e3a84d;
+      --pro-wash: rgba(227, 168, 77, 0.11);
+      --pro-edge: rgba(227, 168, 77, 0.45);
+
+      --con:      #7fa9f5;
+      --con-wash: rgba(127, 169, 245, 0.11);
+      --con-edge: rgba(127, 169, 245, 0.45);
+
+      --flag:      #e4756a;
+      --flag-wash: rgba(228, 117, 106, 0.12);
+
+      --cta-bg:  #e8e9ec;
+      --cta-ink: #0c0f14;
+      --focus:   #7fa9f5;
+
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px -18px rgba(0, 0, 0, .8);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:      #0c0f14;
+    --raised:      #141922;
+    --sunk:        #090c10;
+    --rule:        #262d39;
+    --rule-strong: #3a4352;
+
+    --ink:   #e8e9ec;
+    --ink-2: #99a2af;
+    --ink-3: #6b7480;
+
+    --pro:      #e3a84d;
+    --pro-wash: rgba(227, 168, 77, 0.11);
+    --pro-edge: rgba(227, 168, 77, 0.45);
+
+    --con:      #7fa9f5;
+    --con-wash: rgba(127, 169, 245, 0.11);
+    --con-edge: rgba(127, 169, 245, 0.45);
+
+    --flag:      #e4756a;
+    --flag-wash: rgba(228, 117, 106, 0.12);
+
+    --cta-bg:  #e8e9ec;
+    --cta-ink: #0c0f14;
+    --focus:   #7fa9f5;
+
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px -18px rgba(0, 0, 0, .8);
+  }
+
+  /* ============================================================
+     Base
+     ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  p { margin: 0; }
+  a { color: inherit; }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .shell {
+    width: 100%;
+    max-width: var(--shell);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .band { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
+  .band + .band { border-top: 1px solid var(--rule); }
+
+  /* Mono utility label — the flow-sheet chrome */
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.688rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .lede {
+    font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+    color: var(--ink-2);
+    max-width: var(--measure);
+    line-height: 1.55;
+  }
+
+  .skip {
+    position: absolute;
+    left: -9999px;
+  }
+  .skip:focus {
+    left: 1rem;
+    top: 1rem;
+    z-index: 100;
+    background: var(--raised);
+    color: var(--ink);
+    padding: .6rem 1rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 4px;
+  }
+
+  /* ============================================================
+     Buttons + fields
+     ============================================================ */
+  .btn {
+    font-family: var(--body);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 0.875rem 1.375rem;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    transition: transform .12s ease, opacity .12s ease, background .12s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn[disabled] { opacity: .55; cursor: progress; transform: none; }
+
+  .btn--solid { background: var(--cta-bg); color: var(--cta-ink); }
+  .btn--ghost {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--rule-strong);
+  }
+  .btn--ghost:hover { background: var(--sunk); }
+
+  .btn--mono {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: .55rem .85rem;
+  }
+
+  .field {
+    font-family: var(--body);
+    font-size: 0.9375rem;
+    color: var(--ink);
+    background: var(--raised);
+    border: 1px solid var(--rule-strong);
+    border-radius: 4px;
+    padding: 0.875rem 0.9375rem;
+    line-height: 1;
+    width: 100%;
+    min-width: 0;
+  }
+  .field::placeholder { color: var(--ink-3); }
+  .field:focus-visible { outline-offset: 1px; }
+
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .625rem;
+    max-width: 34rem;
+  }
+  .form-row .field { flex: 1 1 15rem; }
+
+  .form-note {
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+    margin-top: .75rem;
+    max-width: 34rem;
+  }
+  .form-note--err { color: var(--flag); }
+
+  .form-ok {
+    display: flex;
+    gap: .75rem;
+    align-items: baseline;
+    max-width: 34rem;
+    padding: 1rem 1.125rem;
+    background: var(--con-wash);
+    border-left: 2px solid var(--con);
+    border-radius: 0 4px 4px 0;
+  }
+  .form-ok strong { font-family: var(--display); font-size: 1.0625rem; }
+  .form-ok p { font-size: .875rem; color: var(--ink-2); }
+
+  /* ============================================================
+     Masthead
+     ============================================================ */
+  .masthead {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 50;
+    background: color-mix(in srgb, var(--ground) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .masthead__in {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    min-height: 60px;
+  }
+
+  .wordmark {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    margin-right: auto;
+  }
+  .wordmark i {
+    font-style: normal;
+    color: var(--pro);
+  }
+
+  .masthead nav {
+    display: flex;
+    gap: 1.5rem;
+  }
+  .masthead nav a {
+    font-size: 0.875rem;
+    color: var(--ink-2);
+    text-decoration: none;
+  }
+  .masthead nav a:hover { color: var(--ink); }
+
+  @media (max-width: 800px) {
+    .masthead nav { display: none; }
+  }
+
+  /* ============================================================
+     Hero
+     ============================================================ */
+  .hero { padding-block: clamp(3rem, 7vw, 5.5rem) clamp(2.5rem, 5vw, 4rem); }
+
+  .hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: 1.5rem;
+  }
+  .hero__eyebrow::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    background: var(--rule);
+    max-width: 8rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 6.5vw, 4.25rem);
+    max-width: 16ch;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .hero .lede { margin-bottom: 2rem; }
+
+  .creds {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.75rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+  .creds div { display: flex; flex-direction: column; gap: .25rem; }
+  .creds b {
+    font-family: var(--display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ============================================================
+     The flow sheet — core layout device
+     ============================================================ */
+  .sheet__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .resolution {
+    font-family: var(--display);
+    font-size: clamp(1.375rem, 3vw, 1.875rem);
+    font-weight: 600;
+    max-width: 24ch;
+    margin: .35rem 0 0;
+  }
+
+  .sheet {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .sheet::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--rule-strong);
+  }
+
+  .sides {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 6.5rem minmax(0, 1fr);
+    align-items: center;
+  }
+  .sides span {
+    font-family: var(--mono);
+    font-size: .688rem;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+  .sides .s-pro { text-align: right; color: var(--pro); }
+  .sides .s-con { grid-column: 3; color: var(--con); }
+  .sides .s-mid {
+    grid-column: 2;
+    text-align: center;
+    color: var(--ink-3);
+    background: var(--ground);
+    padding-block: .25rem;
+  }
+
+  .round {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 6.5rem minmax(0, 1fr);
+    row-gap: 1rem;
+    align-items: start;
+  }
+
+  .round__mark {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+    align-self: center;
+    background: var(--ground);
+    padding: .5rem 0;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: .625rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    line-height: 1.4;
+  }
+  .round__mark b {
+    display: block;
+    color: var(--ink-2);
+    font-weight: 600;
+  }
+
+  .turn {
+    padding: 1.125rem 1.25rem;
+    border-radius: 4px;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+  .turn h4 {
+    font-family: var(--mono);
+    font-size: .688rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin: 0 0 .625rem;
+  }
+  .turn p { color: var(--ink); }
+
+  .turn--pro {
+    grid-column: 1;
+    grid-row: 1;
+    background: var(--pro-wash);
+    border-right: 2px solid var(--pro-edge);
+    border-radius: 4px 0 0 4px;
+    text-align: right;
+  }
+  .turn--pro h4 { color: var(--pro); }
+
+  .turn--con {
+    grid-column: 3;
+    grid-row: 2;
+    background: var(--con-wash);
+    border-left: 2px solid var(--con-edge);
+    border-radius: 0 4px 4px 0;
+  }
+  .turn--con h4 { color: var(--con); }
+
+  /* A flagged claim inside a transcript turn */
+  .claim {
+    border-bottom: 1px dashed var(--flag);
+    cursor: help;
+  }
+  .flagnote {
+    display: inline-flex;
+    align-items: baseline;
+    gap: .4rem;
+    margin-top: .75rem;
+    font-family: var(--mono);
+    font-size: .625rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--flag);
+    background: var(--flag-wash);
+    padding: .3rem .5rem;
+    border-radius: 3px;
+  }
+
+  .sheet__foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: .5rem;
+  }
+
+  /* Motion: a short settle on load, a full reveal on replay */
+  @keyframes settleIn {
+    from { opacity: .25; transform: translateY(5px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes revealIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .turn {
+    animation: settleIn .5s cubic-bezier(.2, .7, .3, 1) backwards;
+    animation-delay: calc(var(--seat) * 110ms);
+  }
+  .sheet.is-replaying .turn {
+    animation: revealIn .55s cubic-bezier(.2, .7, .3, 1) backwards;
+    animation-delay: calc(var(--seat) * 420ms);
+  }
+
+  @media (max-width: 760px) {
+    .sheet::before { left: 0; }
+    .sides { grid-template-columns: 1fr; padding-left: 1rem; }
+    .sides .s-pro { text-align: left; }
+    .sides .s-con, .sides .s-mid { grid-column: 1; }
+    .sides .s-mid { text-align: left; background: none; padding-block: .5rem 0; }
+
+    .round { grid-template-columns: 1fr; padding-left: 1rem; }
+    .round__mark {
+      grid-column: 1;
+      grid-row: auto;
+      justify-self: start;
+      text-align: left;
+      background: var(--ground);
+      margin-left: -1rem;
+      padding-left: 1rem;
+    }
+    .round__mark b { display: inline; }
+    .turn--pro, .turn--con {
+      grid-column: 1;
+      grid-row: auto;
+      text-align: left;
+      border-radius: 0 4px 4px 0;
+      border-right: none;
+      border-left: 2px solid;
+    }
+    .turn--pro { border-left-color: var(--pro-edge); }
+    .turn--con { border-left-color: var(--con-edge); }
+  }
+
+  /* ============================================================
+     Scorecard
+     ============================================================ */
+  .card {
+    background: var(--raised);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    box-shadow: var(--shadow);
+  }
+
+  .score {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 0;
+  }
+  @media (max-width: 860px) {
+    .score { grid-template-columns: 1fr; }
+  }
+
+  .score__main { padding: clamp(1.25rem, 3vw, 2rem); }
+  .score__side {
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border-left: 1px solid var(--rule);
+    background: var(--sunk);
+    border-radius: 0 6px 6px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+  @media (max-width: 860px) {
+    .score__side { border-left: none; border-top: 1px solid var(--rule); border-radius: 0 0 6px 6px; }
+  }
+
+  .crit + .crit { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+  .crit__top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: .625rem;
+  }
+  .crit__name { font-weight: 600; font-size: .9375rem; }
+  .crit__nums {
+    font-family: var(--mono);
+    font-size: .8125rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .crit__nums .n-pro { color: var(--pro); font-weight: 600; }
+  .crit__nums .n-con { color: var(--con); font-weight: 600; }
+  .crit__nums i { font-style: normal; color: var(--ink-3); padding: 0 .35rem; }
+
+  .meter {
+    display: flex;
+    height: 5px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: var(--rule);
+    margin-bottom: .75rem;
+  }
+  .meter i { display: block; height: 100%; }
+  .meter .m-pro { background: var(--pro); }
+  .meter .m-con { background: var(--con); }
+
+  .crit blockquote {
+    margin: 0;
+    font-size: .875rem;
+    color: var(--ink-2);
+    line-height: 1.55;
+    padding-left: .875rem;
+    border-left: 2px solid var(--rule-strong);
+  }
+  .crit blockquote cite {
+    display: block;
+    margin-top: .375rem;
+    font-family: var(--mono);
+    font-size: .625rem;
+    font-style: normal;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .verdict {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .verdict__who {
+    font-family: var(--display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--con);
+  }
+  .verdict__tally {
+    font-family: var(--mono);
+    font-size: .875rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-2);
+  }
+
+  .dropped { list-style: none; margin: .875rem 0 0; padding: 0; display: grid; gap: .875rem; }
+  .dropped li {
+    font-size: .8125rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+    padding-left: .875rem;
+    border-left: 2px solid var(--flag);
+  }
+  .dropped b {
+    display: block;
+    font-family: var(--mono);
+    font-size: .625rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: .2rem;
+  }
+
+  /* ============================================================
+     Modes — a real shipping sequence, so it's labelled as one
+     ============================================================ */
+  .modes { display: grid; gap: 1rem; grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 900px) { .modes { grid-template-columns: 1fr; } }
+
+  .mode {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+  }
+  .mode__when {
+    font-family: var(--mono);
+    font-size: .625rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: .25rem .5rem;
+    border-radius: 3px;
+    align-self: flex-start;
+    background: var(--sunk);
+    color: var(--ink-3);
+  }
+  .mode--now .mode__when { background: var(--con-wash); color: var(--con); }
+  .mode h3 { font-size: 1.375rem; }
+  .mode p { font-size: .9375rem; color: var(--ink-2); }
+  .mode dl {
+    margin: auto 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: .35rem .875rem;
+    font-size: .8125rem;
+  }
+  .mode dt { font-family: var(--mono); font-size: .625rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); padding-top: .2rem; }
+  .mode dd { margin: 0; color: var(--ink-2); }
+
+  /* ============================================================
+     Audiences
+     ============================================================ */
+  .who { display: grid; gap: 0; margin-top: 2rem; }
+  .who__row {
+    display: grid;
+    grid-template-columns: 13rem 1fr;
+    gap: 1.5rem;
+    padding-block: 1.25rem;
+    border-top: 1px solid var(--rule);
+  }
+  .who__row:last-child { border-bottom: 1px solid var(--rule); }
+  .who__row h3 { font-size: 1.125rem; }
+  .who__row p { color: var(--ink-2); font-size: .9375rem; max-width: var(--measure); }
+  @media (max-width: 700px) {
+    .who__row { grid-template-columns: 1fr; gap: .375rem; }
+  }
+
+  /* ============================================================
+     FAQ
+     ============================================================ */
+  .faq { max-width: 46rem; margin-top: 2rem; }
+  .faq__item { border-top: 1px solid var(--rule); }
+  .faq__item:last-child { border-bottom: 1px solid var(--rule); }
+  .faq__q {
+    width: 100%;
+    background: none;
+    border: 0;
+    padding: 1.25rem 0;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    text-align: left;
+    cursor: pointer;
+    font-family: var(--display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .faq__q span { margin-left: auto; font-family: var(--mono); font-size: 1rem; color: var(--ink-3); }
+  .faq__a {
+    padding: 0 0 1.375rem;
+    font-size: .9375rem;
+    color: var(--ink-2);
+    max-width: var(--measure);
+  }
+
+  /* ============================================================
+     Closing CTA + footer
+     ============================================================ */
+  .close h2 { font-size: clamp(1.875rem, 4.5vw, 2.75rem); max-width: 18ch; margin-bottom: 1rem; }
+
+  .foot {
+    border-top: 1px solid var(--rule);
+    padding-block: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: baseline;
+    justify-content: space-between;
+    font-size: .8125rem;
+    color: var(--ink-3);
+  }
+  .foot nav { display: flex; flex-wrap: wrap; gap: 1.25rem; }
+  .foot a { color: var(--ink-2); text-decoration: none; }
+  .foot a:hover { color: var(--ink); text-decoration: underline; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .001ms !important;
+      animation-delay: 0ms !important;
+      transition-duration: .001ms !important;
+    }
+  }
+</style>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead__in">
+    <a class="wordmark" href="#top">Debaten<i>.</i></a>
+    <nav aria-label="Sections">
+      <a href="#round">The round</a>
+      <a href="#judge">The judge</a>
+      <a href="#modes">Modes</a>
+      <a href="#questions">Questions</a>
+    </nav>
+    <a class="btn btn--solid btn--mono" href="#join">Join the waitlist</a>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ==================== HERO ==================== -->
+  <section class="shell hero" id="top">
+    <div class="hero__eyebrow"><span class="tag">Resolved</span></div>
+    <h1>Every argument deserves <em>a judge who shows the flow.</em></h1>
+    <p class="lede">
+      Debaten runs structured debates on any topic — two AI personas, you against an AI, or you
+      against another person — and scores them the way a real judge does: on clash, on evidence,
+      and on what nobody answered.
+    </p>
+
+    <div x-data="waitlist('hero')">
+      <form class="form-row" @submit.prevent="submit" x-show="!done">
+        <label class="skip" for="email-hero">Email address</label>
+        <input class="field" id="email-hero" name="email" type="email" autocomplete="email"
+               placeholder="you@school.edu" x-model="email" required>
+        <button class="btn btn--solid" type="submit" :disabled="busy"
+                x-text="busy ? 'Adding you…' : 'Get early access'">Get early access</button>
+      </form>
+      <p class="form-note" :class="error && 'form-note--err'" x-show="!done"
+         x-text="error || 'Arena opens first at arena.debaten.com. No spam, one email when it does.'">
+        Arena opens first at arena.debaten.com. No spam, one email when it does.
+      </p>
+      <div class="form-ok" x-show="done" x-cloak>
+        <strong>You're on the list.</strong>
+        <p>We'll write once, when Arena opens.</p>
+      </div>
+    </div>
+
+    <div class="creds">
+      <div><b>4</b><span class="tag">Formats</span></div>
+      <div><b>3</b><span class="tag">Ways to debate</span></div>
+      <div><b>5</b><span class="tag">Scored criteria</span></div>
+      <div><b>0</b><span class="tag">Unsourced verdicts</span></div>
+    </div>
+  </section>
+
+  <!-- ==================== THE ROUND ==================== -->
+  <section class="band" id="round">
+    <div class="shell">
+      <div class="sheet__head">
+        <div>
+          <span class="tag">Arena · Quickfire · 3 rounds</span>
+          <h2 class="resolution">Remote work harms early-career growth.</h2>
+        </div>
+        <button class="btn btn--ghost btn--mono" type="button" id="replay">Replay the round</button>
+      </div>
+
+      <div class="sheet" id="sheet">
+        <div class="sides">
+          <span class="s-pro">Pro — The Pragmatist</span>
+          <span class="s-mid">Flow</span>
+          <span class="s-con">Con — The Populist</span>
+        </div>
+
+        <!-- Round 1 -->
+        <div class="round">
+          <div class="round__mark"><b>R1</b>Opening</div>
+          <article class="turn turn--pro" style="--seat: 0">
+            <h4>Pro · 00:00</h4>
+            <p>
+              Juniors learn by overhearing. The half-formed question, the senior who winces at a bad
+              dashboard, the correction in the hallway — none of it survives a calendar invite.
+              Remote teams schedule the transfer of information and lose the transfer of judgment.
+              <span class="claim" title="Flagged by fact-check: no source supplied">Promotion velocity
+              for under-three-year employees drops wherever it's measured.</span>
+            </p>
+            <span class="flagnote">⚑ Unverified claim</span>
+          </article>
+          <article class="turn turn--con" style="--seat: 1">
+            <h4>Con · 01:30</h4>
+            <p>
+              Ask a junior what actually taught them and they name a person, not a floor plan. The
+              office gave them proximity to one accidental mentor. Remote gives them written
+              decisions they can reread, recordings, and a manager who has to actually manage
+              instead of nodding as they walk past. You're describing companies that never wrote
+              anything down, and blaming the building.
+            </p>
+          </article>
+        </div>
+
+        <!-- Round 2 -->
+        <div class="round">
+          <div class="round__mark"><b>R2</b>Rebuttal</div>
+          <article class="turn turn--pro" style="--seat: 2">
+            <h4>Pro · 03:00</h4>
+            <p>
+              Written decisions record the conclusion. They don't record the discarded options,
+              which is the whole education. And "a manager who has to actually manage" is exactly
+              the problem — most don't, and remote removes the ambient teaching that used to
+              cover for them. My opponent's fix requires every company to become deliberate.
+              Mine requires a room.
+            </p>
+          </article>
+          <article class="turn turn--con" style="--seat: 3">
+            <h4>Con · 04:30</h4>
+            <p>
+              So the case rests on good things happening by accident near a coffee machine.
+              Accidents aren't evenly distributed. The junior with the ninety-minute commute, the
+              one on the other floor, the one nobody invites to lunch — that ambient classroom was
+              never open to them. And remote juniors get more of their manager's calendar, not less.
+            </p>
+          </article>
+        </div>
+
+        <!-- Round 3 -->
+        <div class="round">
+          <div class="round__mark"><b>R3</b>Closing</div>
+          <article class="turn turn--pro" style="--seat: 4">
+            <h4>Pro · 06:00</h4>
+            <p>
+              I'll concede the equity point; it's real. But "companies could be deliberate" is an
+              argument about what should happen, not what does. Judge the mechanism: remove
+              unstructured exposure to expert judgment and you slow its acquisition. My opponent
+              offered documentation, which isn't the same thing, and hope, which isn't a policy.
+            </p>
+          </article>
+          <article class="turn turn--con" style="--seat: 5">
+            <h4>Con · 07:30</h4>
+            <p>
+              The mechanism only matters if it ever reached people — and the concession says it
+              didn't. Hold that. What's left is a comparison: an accidental system that worked for
+              whoever was already near the centre, against a deliberate one that works for whoever
+              reads. I'll take the one you can audit. And the calendar-time claim is still standing,
+              unanswered, two rounds later.
+            </p>
+          </article>
+        </div>
+      </div>
+
+      <div class="sheet__foot">
+        <span class="tag">Round complete · 6 turns · 7:30 elapsed</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== THE JUDGE ==================== -->
+  <section class="band" id="judge">
+    <div class="shell">
+      <span class="tag">The judge</span>
+      <h2 style="font-size: clamp(1.875rem, 4.5vw, 2.5rem); max-width: 20ch; margin: .5rem 0 1rem;">
+        A score is worthless without the quote that earned it.
+      </h2>
+      <p class="lede" style="margin-bottom: 2.5rem;">
+        Debaten's judge grades five criteria, cites the transcript for every point it gives or
+        withholds, and publishes what each side left unanswered. Scored by a different model than
+        the one that argued.
+      </p>
+
+      <div class="card score">
+        <div class="score__main">
+          <div class="crit">
+            <div class="crit__top">
+              <span class="crit__name">Clash &amp; rebuttal</span>
+              <span class="crit__nums"><span class="n-pro">7.8</span><i>/</i><span class="n-con">9.0</span></span>
+            </div>
+            <div class="meter"><i class="m-pro" style="width: 46.4%"></i><i class="m-con" style="width: 53.6%"></i></div>
+            <blockquote>
+              Con engaged Pro's strongest framing directly rather than its weakest phrasing, then
+              converted Pro's own concession into the decisive comparison.
+              <cite>Evidence — Con, R3: "the concession says it didn't"</cite>
+            </blockquote>
+          </div>
+
+          <div class="crit">
+            <div class="crit__top">
+              <span class="crit__name">Argument structure</span>
+              <span class="crit__nums"><span class="n-pro">8.2</span><i>/</i><span class="n-con">8.6</span></span>
+            </div>
+            <div class="meter"><i class="m-pro" style="width: 48.8%"></i><i class="m-con" style="width: 51.2%"></i></div>
+            <blockquote>
+              Both sides carried a clean claim–warrant–impact chain. Pro's mechanism was the
+              sharper construction; Con's impact reached further.
+              <cite>Evidence — Pro, R2: "record the conclusion, not the discarded options"</cite>
+            </blockquote>
+          </div>
+
+          <div class="crit">
+            <div class="crit__top">
+              <span class="crit__name">Evidence quality</span>
+              <span class="crit__nums"><span class="n-pro">5.4</span><i>/</i><span class="n-con">6.1</span></span>
+            </div>
+            <div class="meter"><i class="m-pro" style="width: 47.0%"></i><i class="m-con" style="width: 53.0%"></i></div>
+            <blockquote>
+              Weakest category for both. Pro asserted a promotion-velocity trend without a source;
+              the claim is flagged in the transcript and scored as unsupported.
+              <cite>Flagged — Pro, R1: "drops wherever it's measured"</cite>
+            </blockquote>
+          </div>
+
+          <div class="crit">
+            <div class="crit__top">
+              <span class="crit__name">Clarity</span>
+              <span class="crit__nums"><span class="n-pro">8.9</span><i>/</i><span class="n-con">8.4</span></span>
+            </div>
+            <div class="meter"><i class="m-pro" style="width: 51.4%"></i><i class="m-con" style="width: 48.6%"></i></div>
+            <blockquote>
+              Pro's closing gave the judge an explicit decision rule, which is the single most
+              useful thing a closing can do.
+              <cite>Evidence — Pro, R3: "judge the mechanism"</cite>
+            </blockquote>
+          </div>
+        </div>
+
+        <aside class="score__side">
+          <div>
+            <span class="tag">Decision</span>
+            <div class="verdict">
+              <span class="verdict__who">Con</span>
+              <span class="verdict__tally">32.1 — 30.3</span>
+            </div>
+          </div>
+
+          <div>
+            <span class="tag">Dropped arguments</span>
+            <ul class="dropped">
+              <li>
+                <b>Pro never answered</b>
+                Remote juniors receive more scheduled manager time, not less. Raised R2, repeated
+                R3, unaddressed at the close.
+              </li>
+              <li>
+                <b>Con never answered</b>
+                Written records omit the discarded options, and the discarded options are the
+                education. Raised R2, dropped.
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <span class="tag">Fact-check</span>
+            <ul class="dropped" style="margin-top:.875rem;">
+              <li style="border-left-color: var(--flag)">
+                <b>1 claim flagged</b>
+                Statistical claims without a retrievable source are marked in the transcript and
+                cost evidence points. They are never silently accepted.
+              </li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MODES ==================== -->
+  <section class="band" id="modes">
+    <div class="shell">
+      <span class="tag">Three ways in</span>
+      <h2 style="font-size: clamp(1.875rem, 4.5vw, 2.5rem); max-width: 20ch; margin: .5rem 0 1rem;">
+        Watch a round, take a side, or challenge someone.
+      </h2>
+      <p class="lede" style="margin-bottom: 2.5rem;">
+        Same format, same judge, same scorecard. What changes is who's holding the other position.
+      </p>
+
+      <div class="modes">
+        <article class="card mode mode--now">
+          <span class="mode__when">Opens first</span>
+          <h3>Arena</h3>
+          <p>
+            Pick a resolution and two personas — the Pragmatist, the Skeptic, the Historian, the
+            Populist, the Idealist. They argue, the judge scores, you vote. Every round gets a
+            permanent link.
+          </p>
+          <dl>
+            <dt>Sides</dt><dd>AI vs AI</dd>
+            <dt>You</dt><dd>Watch and vote, no account needed</dd>
+          </dl>
+        </article>
+
+        <article class="card mode">
+          <span class="mode__when">Next</span>
+          <h3>Sparring</h3>
+          <p>
+            Take a side yourself against an AI briefed to beat it. Afterwards the judge does
+            something a human opponent won't: it tells you exactly which of its arguments you
+            failed to answer, and what you should have said.
+          </p>
+          <dl>
+            <dt>Sides</dt><dd>You vs AI</dd>
+            <dt>You</dt><dd>Debate, then get coached</dd>
+          </dl>
+        </article>
+
+        <article class="card mode">
+          <span class="mode__when">After that</span>
+          <h3>League</h3>
+          <p>
+            Ranked rounds against real opponents, with the AI as judge and the audience as second
+            opinion. Ladders, tournaments, and a rating that means something because the rubric
+            is public.
+          </p>
+          <dl>
+            <dt>Sides</dt><dd>You vs a person</dd>
+            <dt>You</dt><dd>Compete, climb, get rated</dd>
+          </dl>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== WHO ==================== -->
+  <section class="band">
+    <div class="shell">
+      <span class="tag">Who this is for</span>
+      <div class="who">
+        <div class="who__row">
+          <h3>Debaters and coaches</h3>
+          <p>
+            Competitive debate, Model UN, mock trial. Drill a resolution twenty times before the
+            tournament, and get a flow for every round without asking someone to judge it.
+          </p>
+        </div>
+        <div class="who__row">
+          <h3>Teachers</h3>
+          <p>
+            Assign a resolution, let the class argue both sides, and grade against a rubric that
+            cites the transcript instead of rewarding whoever spoke loudest.
+          </p>
+        </div>
+        <div class="who__row">
+          <h3>People with something to defend</h3>
+          <p>
+            A pitch, a design review, a salary conversation, a thesis. Find out which objection you
+            can't answer before the person across the table does.
+          </p>
+        </div>
+        <div class="who__row">
+          <h3>Anyone tired of one-sided takes</h3>
+          <p>
+            Read a contested topic argued properly by both sides in seven minutes, with the weak
+            claims marked as weak.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== QUESTIONS ==================== -->
+  <section class="band" id="questions">
+    <div class="shell">
+      <span class="tag">Fair questions</span>
+      <h2 style="font-size: clamp(1.875rem, 4.5vw, 2.5rem); max-width: 18ch; margin: .5rem 0 0;">
+        The objections we'd raise too.
+      </h2>
+
+      <div class="faq">
+        <div class="faq__item" x-data="{ open: true }">
+          <button class="faq__q" type="button" @click="open = !open" :aria-expanded="open" aria-controls="a1">
+            Isn't the AI judge just biased in a different direction?
+            <span x-text="open ? '−' : '+'">−</span>
+          </button>
+          <div class="faq__a" id="a1" x-show="open" x-collapse>
+            Probably, in ways we haven't found yet — which is why the rubric is published, every
+            score is tied to a quote you can check against the transcript, and the model that
+            judges is never the model that argued. You can contest a score, and contested rounds
+            get re-judged by a panel with the disagreement shown rather than averaged away.
+          </div>
+        </div>
+
+        <div class="faq__item" x-data="{ open: false }">
+          <button class="faq__q" type="button" @click="open = !open" :aria-expanded="open" aria-controls="a2">
+            Do the AI debaters invent statistics?
+            <span x-text="open ? '−' : '+'">+</span>
+          </button>
+          <div class="faq__a" id="a2" x-show="open" x-collapse x-cloak>
+            They would, so we check. Every specific factual claim is run against a retrieval pass
+            after the round. Anything without a source is marked in the transcript where it was
+            said and costs that side evidence points — you can see this happen to Pro in the round
+            above. An unsourced claim never quietly becomes part of a winning case.
+          </div>
+        </div>
+
+        <div class="faq__item" x-data="{ open: false }">
+          <button class="faq__q" type="button" @click="open = !open" :aria-expanded="open" aria-controls="a3">
+            Can people debate any topic at all?
+            <span x-text="open ? '−' : '+'">+</span>
+          </button>
+          <div class="faq__a" id="a3" x-show="open" x-collapse x-cloak>
+            No. Some propositions aren't arguments, they're attacks with a question mark on the
+            end, and "steelman both sides" is the wrong frame for whether a group of people
+            deserves rights. Those are blocked outright. Genuinely contested topics — policy,
+            ethics, economics, science with real disagreement — are open, with context shown
+            before the round starts.
+          </div>
+        </div>
+
+        <div class="faq__item" x-data="{ open: false }">
+          <button class="faq__q" type="button" @click="open = !open" :aria-expanded="open" aria-controls="a4">
+            Will it be free?
+            <span x-text="open ? '−' : '+'">+</span>
+          </button>
+          <div class="faq__a" id="a4" x-show="open" x-collapse x-cloak>
+            Arena is free to watch, always, no account. A daily allowance of rounds you start
+            yourself is free too. Unlimited sparring, every format, and full coaching feedback are
+            paid, with classroom pricing per seat for schools.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== JOIN ==================== -->
+  <section class="band close" id="join">
+    <div class="shell">
+      <span class="tag">Early access</span>
+      <h2 style="margin-top:.5rem;">Be there when the first round opens.</h2>
+      <p class="lede" style="margin-bottom: 2rem;">
+        Arena launches at arena.debaten.com. Tell us who you are and we'll open it to your
+        group first.
+      </p>
+
+      <div x-data="waitlist('close')">
+        <form class="form-row" @submit.prevent="submit" x-show="!done">
+          <label class="skip" for="email-close">Email address</label>
+          <input class="field" id="email-close" name="email" type="email" autocomplete="email"
+                 placeholder="you@school.edu" x-model="email" required>
+          <label class="skip" for="role-close">I am a</label>
+          <select class="field" id="role-close" name="role" x-model="role" style="flex: 0 1 11rem;">
+            <option value="debater">Debater</option>
+            <option value="coach">Coach</option>
+            <option value="teacher">Teacher</option>
+            <option value="professional">Professional</option>
+            <option value="curious">Just curious</option>
+          </select>
+          <button class="btn btn--solid" type="submit" :disabled="busy"
+                  x-text="busy ? 'Adding you…' : 'Join the waitlist'">Join the waitlist</button>
+        </form>
+        <p class="form-note" :class="error && 'form-note--err'" x-show="!done"
+           x-text="error || 'One email at launch. Unsubscribe in a click. We never sell the list.'">
+          One email at launch. Unsubscribe in a click. We never sell the list.
+        </p>
+        <div class="form-ok" x-show="done" x-cloak>
+          <strong>You're on the list.</strong>
+          <p>We'll write once, when Arena opens.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="shell foot">
+  <span>© 2026 Debaten · debaten.com</span>
+  <nav aria-label="Legal">
+    <a href="/legal/privacy">Privacy</a>
+    <a href="/legal/terms">Terms</a>
+    <a href="/manifesto">Manifesto</a>
+    <a href="mailto:hello@debaten.com">hello@debaten.com</a>
+  </nav>
+</footer>
+
+<script>
+  /* Alpine hides x-show elements only once it boots; x-cloak covers the gap. */
+  document.head.insertAdjacentHTML('beforeend', '<style>[x-cloak]{display:none!important}</style>');
+
+  /* ============================================================
+     Config — the only values that change between environments.
+     ============================================================ */
+  const CONFIG = Object.freeze({
+    /* Set to your form endpoint (Formspree, Resend route, /api/waitlist…).
+       While empty, the form validates and confirms locally without sending. */
+    waitlistEndpoint: '',
+    arenaUrl: 'https://arena.debaten.com',
+    source: 'debaten.com'
+  });
+
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  const validate = (email) => {
+    const trimmed = email.trim();
+    if (!trimmed) return 'Enter your email address.';
+    if (!EMAIL_RE.test(trimmed)) return 'That email address looks incomplete.';
+    return null;
+  };
+
+  const postSignup = async (payload) => {
+    if (!CONFIG.waitlistEndpoint) return;
+    const res = await fetch(CONFIG.waitlistEndpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error(`Signup failed with status ${res.status}`);
+  };
+
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('waitlist', (placement) => ({
+      email: '',
+      role: 'debater',
+      busy: false,
+      done: false,
+      error: '',
+
+      async submit() {
+        const problem = validate(this.email);
+        if (problem) {
+          this.error = problem;
+          return;
+        }
+
+        this.error = '';
+        this.busy = true;
+
+        try {
+          await postSignup({
+            email: this.email.trim().toLowerCase(),
+            role: this.role,
+            placement,
+            source: CONFIG.source
+          });
+          this.done = true;
+        } catch (err) {
+          console.error('[waitlist]', err);
+          this.error = "That didn't go through. Try again, or email hello@debaten.com.";
+        } finally {
+          this.busy = false;
+        }
+      }
+    }));
+  });
+
+  /* ============================================================
+     Replay the round — restart the staggered reveal on demand.
+     ============================================================ */
+  (() => {
+    const sheet = document.getElementById('sheet');
+    const button = document.getElementById('replay');
+    if (!sheet || !button) return;
+
+    const turns = sheet.querySelectorAll('.turn');
+    const lastSeat = turns.length - 1;
+    const stagger = 420;
+    const tail = 600;
+
+    button.addEventListener('click', () => {
+      sheet.classList.remove('is-replaying');
+      void sheet.offsetWidth; /* force reflow so the animation restarts */
+      sheet.classList.add('is-replaying');
+
+      button.disabled = true;
+      window.setTimeout(() => {
+        button.disabled = false;
+        sheet.classList.remove('is-replaying');
+      }, lastSeat * stagger + tail);
+    });
+  })();
+</script>
+
+<!-- Alpine plugins must be registered before the core script boots. -->
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.14.9/dist/cdn.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"></script>
